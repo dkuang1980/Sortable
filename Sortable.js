@@ -319,7 +319,7 @@
 			// Check filter
 			if (typeof filter === 'function') {
 				if (filter.call(this, evt, target, this)) {
-					_dispatchEvent(_this, originalTarget, 'filter', target, el, startIndex);
+					_dispatchEvent(_this, originalTarget, 'filter', target, el, startIndex, undefined, evt);
 					evt.preventDefault();
 					return; // cancel dnd
 				}
@@ -329,7 +329,7 @@
 					criteria = _closest(originalTarget, criteria.trim(), el);
 
 					if (criteria) {
-						_dispatchEvent(_this, criteria, 'filter', target, el, startIndex);
+						_dispatchEvent(_this, criteria, 'filter', target, el, startIndex, undefined, evt);
 						return true;
 					}
 				});
@@ -584,7 +584,7 @@
 				cloneEl = _clone(dragEl);
 				_css(cloneEl, 'display', 'none');
 				rootEl.insertBefore(cloneEl, dragEl);
-				_dispatchEvent(this, rootEl, 'clone', dragEl);
+				_dispatchEvent(this, rootEl, 'clone', dragEl, undefined, undefined, undefined, evt);
 			}
 
 			_toggleClass(dragEl, options.dragClass, true);
@@ -832,14 +832,14 @@
 						if (newIndex >= 0) {
 
 							// Add event
-							_dispatchEvent(null, parentEl, 'add', dragEl, rootEl, oldIndex, newIndex);
+							_dispatchEvent(null, parentEl, 'add', dragEl, rootEl, oldIndex, newIndex, evt);
 
 							// Remove event
-							_dispatchEvent(this, rootEl, 'remove', dragEl, rootEl, oldIndex, newIndex);
+							_dispatchEvent(this, rootEl, 'remove', dragEl, rootEl, oldIndex, newIndex, evt);
 
 							// drag from one list and drop into another
-							_dispatchEvent(null, parentEl, 'sort', dragEl, rootEl, oldIndex, newIndex);
-							_dispatchEvent(this, rootEl, 'sort', dragEl, rootEl, oldIndex, newIndex);
+							_dispatchEvent(null, parentEl, 'sort', dragEl, rootEl, oldIndex, newIndex, evt);
+							_dispatchEvent(this, rootEl, 'sort', dragEl, rootEl, oldIndex, newIndex, evt);
 						}
 					}
 					else {
@@ -852,8 +852,8 @@
 
 							if (newIndex >= 0) {
 								// drag & drop within the same list
-								_dispatchEvent(this, rootEl, 'update', dragEl, rootEl, oldIndex, newIndex);
-								_dispatchEvent(this, rootEl, 'sort', dragEl, rootEl, oldIndex, newIndex);
+								_dispatchEvent(this, rootEl, 'update', dragEl, rootEl, oldIndex, newIndex, evt);
+								_dispatchEvent(this, rootEl, 'sort', dragEl, rootEl, oldIndex, newIndex, evt);
 							}
 						}
 					}
@@ -863,7 +863,7 @@
 							newIndex = oldIndex;
 						}
 
-						_dispatchEvent(this, rootEl, 'end', dragEl, rootEl, oldIndex, newIndex);
+						_dispatchEvent(this, rootEl, 'end', dragEl, rootEl, oldIndex, newIndex, evt);
 
 						// Save sorting
 						this.save();
@@ -1133,7 +1133,7 @@
 
 
 
-	function _dispatchEvent(sortable, rootEl, name, targetEl, fromEl, startIndex, newIndex) {
+	function _dispatchEvent(sortable, rootEl, name, targetEl, fromEl, startIndex, newIndex, originalEvent) {
 		sortable = (sortable || rootEl[expando]);
 
 		var evt = document.createEvent('Event'),
@@ -1153,7 +1153,7 @@
 		rootEl.dispatchEvent(evt);
 
 		if (options[onName]) {
-			options[onName].call(sortable, evt);
+			options[onName].call(sortable, evt, originalEvent);
 		}
 	}
 
