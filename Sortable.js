@@ -66,6 +66,7 @@
 
 		supportDraggable = !!('draggable' in document.createElement('div')),
 		supportCssPointerEvents = (function (el) {
+			// if it is IE11, then we force return false to disable pointer events
 			if (window.navigator.userAgent.indexOf('Trident/') >= 0)
 				return false
 			el = document.createElement('x');
