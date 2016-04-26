@@ -66,6 +66,8 @@
 
 		supportDraggable = !!('draggable' in document.createElement('div')),
 		supportCssPointerEvents = (function (el) {
+			if (window.navigator.userAgent.indexOf('Trident/') >= 0)
+				return false
 			el = document.createElement('x');
 			el.style.cssText = 'pointer-events:auto';
 			return el.style.pointerEvents === 'auto';
